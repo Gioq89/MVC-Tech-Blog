@@ -1,2 +1,6 @@
-DROP DATABASE IF EXISTS example_db;
-CREATE DATABASE example_db;
+SHOW Databases;
+
+DROP DATABASE IF EXISTS blog_db;
+CREATE DATABASE blop_db;
+
+USE blog_db;
