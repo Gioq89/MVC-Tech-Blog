@@ -4,30 +4,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Registry</title>
+  <title>The Tech Blog</title>
   <link rel="stylesheet" href="/css/jass.css">
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 
-<body>
+<body class="bg-info">
   <header class="display-flex justify-space-between align-center p-2">
-    <h1>
-      User Registry
-    </h1>
-    <!-- Only display the logout button if the user is logged in -->
     {{#if logged_in}}
-    <nav>
-      <button class="btn" id="logout">logout</button>
+    <nav style="font-size: 1.5rem">
+      <a href="/" id="" class="pr-5">Home</a>
+      <a href="/dashboard" id="" class="pr-5">Dashboard</a>
+      <a href="/logout" id="" class="pr-5">Logout</a>
     </nav>
+    {{else}}
+    <nav style="font-size: 1.5rem" >
+      <a href="/" id="" class="pr-5">Home</a>
+      <a href="/login" id="" class="pr-5">Login</a>
+      <a href="/signup" id="" class="pr-5">Sign Up</a>
     {{/if}}
   </header>
-  <main class="container container-fluid mt-5">
+    <h1 style ="font-size:3rem">
+      The Tech Blog
+    </h1>
+  <main>
     {{{ body }}}
   </main>
   <footer>
       
   </footer>
 
-  <!-- Only include the logout script if the user is logged in -->
   {{#if logged_in}}
   <script src="/js/logout.js"></script>
   {{/if}}
