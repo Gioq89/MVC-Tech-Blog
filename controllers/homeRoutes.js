@@ -1,8 +1,8 @@
 const router = require("express").Router();
 const { User, BlogPost, Comments } = require("../models");
 
-// GET all blogposts for homepage with auth
-router.get ("/", withAuth, async (req, res) => {
+// GET all blogposts for homepage without auth
+router.get ("/", async (req, res) => {
     try {
         const blogPost = await BlogPost.findAll({
             attributes: { exclude: ["password"] },
@@ -58,7 +58,7 @@ router.get("/blogpost/:id/comments", async (req, res) => {
     res.redirect("/login");
   } else {
     try {
-      const commentData = await Comment.findAll({
+      const commentsData = await Comments.findAll({
         where: { commentsPost: req.params.id },
         include: [
           {
@@ -68,8 +68,8 @@ router.get("/blogpost/:id/comments", async (req, res) => {
         ],
       });
 
-      const comments = commentData.map((comment) =>
-        comment.get({ plain: true })
+      const comments = commentsData.map((comments) =>
+        comments.get({ plain: true })
       );
 
       res.render("comments", {
@@ -84,12 +84,12 @@ router.get("/blogpost/:id/comments", async (req, res) => {
 });
 
 // GET one comment
-router.get("/comment/:id", async (req, res) => {
+router.get("/comments/:id", async (req, res) => {
   if (!req.session.loggedIn) {
     res.redirect("/login");
   } else {
     try {
-      const commentData = await Comment.findByPk(req.params.id, {
+      const commentsData = await Comments.findByPk(req.params.id, {
         include: [
           {
             model: User,
@@ -98,10 +98,10 @@ router.get("/comment/:id", async (req, res) => {
         ],
       });
 
-      const comment = commentData.get({ plain: true });
+      const comments = commentsData.get({ plain: true });
 
-      res.render("comment", {
-        ...comment,
+      res.render("comments", {
+        ...comments,
         logged_in: req.session.logged_in,
       });
     } catch (err) {
@@ -171,12 +171,12 @@ router.get("/edit/:id", async (req, res) => {
 });
 
 // GET one comment for editing
-router.get("/editcomment/:id", async (req, res) => {
+router.get("/editcomments/:id", async (req, res) => {
   if (!req.session.loggedIn) {
     res.redirect("/login");
   } else {
     try {
-      const commentData = await Comment.findByPk(req.params.id, {
+      const commentsData = await Comments.findByPk(req.params.id, {
         include: [
           {
             model: User,
@@ -185,10 +185,10 @@ router.get("/editcomment/:id", async (req, res) => {
         ],
       });
 
-      const comment = commentData.get({ plain: true });
+      const comments = commentsData.get({ plain: true });
 
       res.render("editcomment", {
-        ...comment,
+        ...comments,
         logged_in: req.session.logged_in,
       });
     } catch (err) {
