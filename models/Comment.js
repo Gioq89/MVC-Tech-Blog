@@ -1,28 +1,37 @@
 const { Model, DataTypes } = require('sequelize');
 const bcrypt = require('bcrypt');
 const sequelize = require('../config/connection');
-// create the User model
-class User extends Model {
+
+// create the BlogPost model
+class Comments extends Model {
   checkPassword(loginPw) {
     return bcrypt.compareSync(loginPw, this.password);
   }
 }
 // define table columns and configuration
-User.init(
+Comments.init(
   {
-  id: {
+    id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
         autoIncrement: true,
   },
-  username: {
+    commentsContent: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    password: {
+    commentsDate: {
+        type: DataTypes.DATE,
+        allowNull: false,
+    },
+    commentsAuthor: {
         type: DataTypes.STRING,
         allowNull: false,
+        references: {
+            model: 'user',
+            key: 'username',
+    },
     },
     },
   {
@@ -33,11 +42,10 @@ User.init(
       },
     },
     sequelize,
-    timestamps: false,
     freezeTableName: true,
     underscored: true,
-    modelName: 'user',
+    modelName: 'blogpost',
   }
 );
 
-module.exports = User;
+module.exports = Comments;
