@@ -4,34 +4,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Tech Blog</title>
+  <title>Tech Wizards: The Tech Blog</title>
   <link rel="stylesheet" href="/css/jass.css">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body class="bg-info">
   <header class="display-flex justify-space-between align-center p-2">
-    {{#if logged_in}}
-    <nav style="font-size: 1.5rem">
-      <a href="/" id="" class="pr-5">Home</a>
-      <a href="/dashboard" id="" class="pr-5">Dashboard</a>
-      <a href="/logout" id="" class="pr-5">Logout</a>
+    <nav class="main-nav" style="font-size: 1.5rem">
+      {{#if logged_in}}
+      <a href="/" class="pr-5">Home</a>
+      <a href="/dashboard" class="pr-5">Dashboard</a>
+      <a href="/logout" class="pr-5">Logout</a>
+      {{else}}
+      <a href="/" class="pr-5">Home</a>
+      <a href="/login" class="pr-5">Login</a>
+      <a href="/signup" class="pr-5">Sign Up</a>
+      {{/if}}
     </nav>
-    {{else}}
-    <nav style="font-size: 1.5rem" >
-      <a href="/" id="" class="pr-5">Home</a>
-      <a href="/login" id="" class="pr-5">Login</a>
-      <a href="/signup" id="" class="pr-5">Sign Up</a>
-    {{/if}}
   </header>
-    <h1 style ="font-size:3rem">
-      The Tech Blog
-    </h1>
+  <h1 style="font-size: 3rem">
+    Tech Wizards: The Tech Blog
+  </h1>
   <main>
     {{{ body }}}
   </main>
   <footer>
-      
   </footer>
 
   {{#if logged_in}}
