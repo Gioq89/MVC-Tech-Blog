@@ -4,4 +4,5 @@ const withAuth = require('../utils/auth');
 
 //CRUD operations for blogposts
 
+
 module.exports = router;
