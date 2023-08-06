@@ -111,20 +111,61 @@ router.get("/comments/:id", async (req, res) => {
   }
 });
 
-// GET all blogposts for a user
-router.get("/dashboard", async (req, res) => {
+// GET one comment for editing
+router.get("/editcomments/:id", async (req, res) => {
   if (!req.session.loggedIn) {
     res.redirect("/login");
   } else {
     try {
-      const blogPostData = await BlogPost.findAll({
-        where: { blogPostUser: req.session.user_id },
+      const commentsData = await Comments.findByPk(req.params.id, {
         include: [
           {
             model: User,
             attributes: ["username"],
           },
         ],
+      });
+
+      const comments = commentsData.get({ plain: true });
+
+      res.render("editcomment", {
+        ...comments,
+        logged_in: req.session.logged_in,
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
+  }
+});
+
+// GET all blogposts for a user
+router.get("/dashboard", withAuth, async (req, res) => {
+  if (!req.session.loggedIn) {
+    res.redirect("/login");
+  } else {
+    try {
+      const blogPostData = await BlogPost.findAll({
+          where: { 
+              blogPostUser: req.session.user_id
+          },
+          attributes: [
+              'id', 
+              'postTitle', 
+              'postContent', 
+              'postDate',
+              'postAuthor'
+          ],
+          include: [
+              {
+                  model: Comment,
+                  attributes: [ 'id', 'commentsContent', 'commentsAuthor', 'commentsDate' ],
+                  include: {
+                      model: User,
+                      attributes: ['username'],
+              },
+          },
+          ],
       });
 
       const blogposts = blogPostData.map((blogpost) =>
@@ -161,34 +202,6 @@ router.get("/edit/:id", async (req, res) => {
 
       res.render("edit", {
         ...blogpost,
-        logged_in: req.session.logged_in,
-      });
-    } catch (err) {
-      console.log(err);
-      res.status(500).json(err);
-    }
-  }
-});
-
-// GET one comment for editing
-router.get("/editcomments/:id", async (req, res) => {
-  if (!req.session.loggedIn) {
-    res.redirect("/login");
-  } else {
-    try {
-      const commentsData = await Comments.findByPk(req.params.id, {
-        include: [
-          {
-            model: User,
-            attributes: ["username"],
-          },
-        ],
-      });
-
-      const comments = commentsData.get({ plain: true });
-
-      res.render("editcomment", {
-        ...comments,
         logged_in: req.session.logged_in,
       });
     } catch (err) {
