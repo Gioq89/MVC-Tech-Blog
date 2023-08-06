@@ -3,7 +3,7 @@ const { BlogPost } = require('../models');
 const withAuth = require('../utils/auth');
 
 // GET all blogposts for dashboard with auth
-router.get('/', withAuth, async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const blogPost = await BlogPost.findAll({
             where: { 

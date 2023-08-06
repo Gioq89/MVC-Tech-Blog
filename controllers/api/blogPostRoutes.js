@@ -4,7 +4,7 @@ const withAuth = require('../../utils/auth');
 
 //CRUD operations for blogposts
 // Create a new blog post
-router.post('/', withAuth, async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         const newBlogPost = await BlogPost.create({
             postTitle: req.body.postTitle,
@@ -18,7 +18,7 @@ router.post('/', withAuth, async (req, res) => {
 });
 
 // Delete a blog post
-router.delete('/:id', withAuth, async (req, res) => {
+router.delete('/:id', async (req, res) => {
     try {
         const deleteBlogPost = await BlogPost.destroy({
             where: {
@@ -37,7 +37,7 @@ router.delete('/:id', withAuth, async (req, res) => {
 });
 
 // Update a blog post
-router.put('/:id', withAuth, async (req, res) => {
+router.put('/:id', async (req, res) => {
     try {
         const updateBlogPost = await BlogPost.update({
             postTitle: req.body.postTitle,

@@ -1,12 +1,12 @@
 const createCommentHandler = async (event) => {
     event.preventDefault();
 
-    const comment_content = document.querySelector('#comment-text').value.trim();
+    const commentsContent = document.querySelector('#comment-text').value.trim();
     const post_id = window.location.toString().split('/')[
         window.location.toString().split('/').length - 1
     ];
 
-    if (comment_content) {
+    if (commentsContent) {
         const response = await fetch('/api/comments', {
             method: 'POST',
             body: JSON.stringify({
@@ -26,6 +26,4 @@ const createCommentHandler = async (event) => {
     }
 };
 
-document
-    .querySelector('.comment-form')
-    .addEventListener('submit', createCommentHandler);
+document.querySelector('.comment-form').addEventListener('submit', createCommentHandler);
