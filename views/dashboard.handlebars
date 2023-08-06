@@ -1,0 +1,23 @@
+<section class="dashboard">
+  <div class="dashboard-btn-container">
+    <button class="dashboard-btn" id="dashboard-btn">Create Post</button>
+  </div>
+
+  <div class="userposts-container">
+    {{#each userposts as |userpost|}}
+      <a href="/dashboard/edit/{{userpost.id}}" class="post-link">
+        <div class="post-card box-shadow">
+          <div class="post-header display-flex justify-space-between">
+            <h2 class="post-title">{{userpost.postTitle}}</h2>
+            <h3 class="post-date">{{format_date userpost.postDate}}</h3>
+          </div>
+
+        </div>
+      </a>
+
+    {{/each}}
+
+  </div>
+</section>
+
+<script src="/js/dashboard.js"></script>
