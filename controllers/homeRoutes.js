@@ -140,7 +140,7 @@ router.get("/editcomments/:id", async (req, res) => {
 });
 
 // GET all blogposts for a user
-router.get("/dashboard", withAuth, async (req, res) => {
+router.get("/dashboard", async (req, res) => {
   if (!req.session.loggedIn) {
     res.redirect("/login");
   } else {
