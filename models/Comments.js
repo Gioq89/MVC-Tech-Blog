@@ -21,11 +21,11 @@ Comments.init(
       allowNull: false,
     },
     commentsAuthor: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: 'user',
-        key: 'username',
+        key: 'id',
       },
     },
   },

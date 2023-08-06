@@ -1,4 +1,6 @@
-[
+const { BlogPost } = require("../models");
+
+const blogPostData = [
     {
         "id": 1,
         "postTitle": "Test",
@@ -33,5 +35,9 @@
         "postContent": "Test Blog Post 5",
         "postDate": "08/05/23",
         "postAuthor": "Test Author 5"
-    }
-]
+    },
+];
+
+const seedPosts = () => BlogPost.bulkCreate(blogPostData);
+
+module.exports = seedPosts;

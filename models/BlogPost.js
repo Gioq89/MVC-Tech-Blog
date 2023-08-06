@@ -25,11 +25,11 @@ BlogPost.init(
       allowNull: false,
     },
     postAuthor: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: 'user',
-        key: 'username',
+        key: 'id',
       },
     },
   },
