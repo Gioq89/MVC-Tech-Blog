@@ -3,6 +3,10 @@ const { User, BlogPost, Comments } = require("../models");
 
 // GET all blogposts for homepage without auth
 router.get ("/", async (req, res) => {
+  if (!req.session.loggedIn) {
+    res.redirect("/login");
+    return;
+  } 
     try {
         const blogPost = await BlogPost.findAll({
             attributes: { exclude: ["password"] },
@@ -213,21 +217,11 @@ router.get("/edit/:id", async (req, res) => {
 
 // GET login page
 router.get("/login", (req, res) => {
-  if (req.session.logged_in) {
-    res.redirect("/");
-    return;
-  }
-
   res.render("login");
 });
 
 // GET signup page
 router.get("/signup", (req, res) => {
-  if (req.session.logged_in) {
-    res.redirect("/");
-    return;
-  }
-
   res.render("signup");
 });
 

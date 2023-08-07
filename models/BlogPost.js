@@ -25,7 +25,7 @@ BlogPost.init(
       allowNull: false,
     },
     postAuthor: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
       references: {
         model: 'user',
