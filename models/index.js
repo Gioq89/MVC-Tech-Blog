@@ -1,24 +1,25 @@
 const User = require("./User");
 const BlogPost = require("./BlogPost");
 const Comments = require("./Comments");
+
 // create associations
 // user has many blogposts
 User.hasMany(BlogPost, {
-  foreignKey: "userId",
+  foreignKey: "postAuthor",
   onDelete: "CASCADE",
 });
 // blogpost belongs to user
 BlogPost.belongsTo(User, {
-  foreignKey: "userId",
+  foreignKey: "postAuthor",
 });
 // user has many comments
 User.hasMany(Comments, {
-  foreignKey: "userId",
+  foreignKey: "commentsAuthor",
   onDelete: "CASCADE",
 });
 // comment belongs to user
 Comments.belongsTo(User, {
-  foreignKey: "userId",
+  foreignKey: "commentsAuthor",
 });
 // blogpost has many comments
 BlogPost.hasMany(Comments, {

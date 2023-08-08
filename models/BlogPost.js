@@ -1,9 +1,9 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
-// create the BlogPost model
+
 class BlogPost extends Model {
 }
-// define table columns and configuration
+
 BlogPost.init(
   {
     id: {
@@ -25,7 +25,7 @@ BlogPost.init(
       allowNull: false,
     },
     postAuthor: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER, // Change this to INTEGER since it references the user's ID
       allowNull: false,
       references: {
         model: 'user',
