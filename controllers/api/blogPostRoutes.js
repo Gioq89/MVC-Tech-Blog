@@ -1,79 +1,110 @@
-const router = require('express').Router();
-const { BlogPost, Comments } = require('../../models');
-const withAuth = require('../../utils/auth');
+const router = require("express").Router();
+const { BlogPost, Comments } = require("../../models");
+const withAuth = require("../../utils/auth");
 
 //CRUD operations for blogposts
-// Create a new blog post
-router.post('/', async (req, res) => {
-    try {
-        const newBlogPost = await BlogPost.create({
-            postTitle: req.body.postTitle,
-            postContent: req.body.postContent,
-            user_id: req.session.user_id,
-        });
-        res.status(200).json(newBlogPost);
-    } catch (err) {
-        res.status(400).json(err);
-    }
-});
-
-// Delete a blog post
-router.delete('/:id', async (req, res) => {
-    try {
-        const deleteBlogPost = await BlogPost.destroy({
-            where: {
-                id: req.params.id,
-                user_id: req.session.user_id,
-            },
-        });
-        if (!deleteBlogPost) {
-            res.status(404).json({ message: 'No blog post found with this id!' });
-            return;
-        }
-        res.status(200).json(deleteBlogPost);
-    } catch (err) {
-        res.status(500).json(err);
-    }
-});
-
-// Update a blog post
-router.put('/:id', async (req, res) => {
-    try {
-        const updateBlogPost = await BlogPost.update({
-            postTitle: req.body.postTitle,
-            postContent: req.body.postContent,
-            user_id: req.session.user_id,
-        },
-            {
-                where: {
-                    id: req.params.id,
-                },
-            });
-        if (!updateBlogPost) {
-            res.status(404).json({ message: 'No blog post found with this id!' });
-            return;
-        }
-        res.status(200).json(updateBlogPost);
-    } catch (err) {
-        res.status(500).json(err);
-    }
-});
-
 // Get all blog posts
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
+  try {
+    const allBlogPost = await BlogPost.findAll({
+      attributes: ["id", "postTitle", "postContent", "postDate", "postAuthor"],
+      include: [
+        {
+          model: Comments,
+          attributes: ["id", "commentsContent", "commentsDate", "commentsAuthor"],
+        },
+        {
+            model: User,
+            attributes: ["username"],
+        }
+      ],
+    });
+    res.status(200).json(allBlogPost);
+  } catch (err) {
+    res.status(500).json({error: "Unable to retrieve blogposts."});
+  }
+});
+// Get a single blog post
+router.get("/:id", async (req, res) => {
     try {
-        const allBlogPost = await BlogPost.findAll({
+        const blogPost = await BlogPost.findByPk(req.params.id, {
+            attributes: ["id", "postTitle", "postContent", "postDate", "postAuthor"],
             include: [
                 {
                     model: Comments,
-                    attributes: ['id', 'comment_content', 'post_id', 'user_id', 'created_at'],
+                    attributes: ["id", "commentsContent", "commentsDate", "commentsAuthor"],
                 },
+                {
+                    model: User,
+                    attributes: ["username"],
+                }
             ],
         });
-        res.status(200).json(allBlogPost);
+        if (!blogPost) {
+            res.status(404).json({message: "No blog post found with this id!"});
+            return;
+        }
+        res.status(200).json(blogPost);
     } catch (err) {
-        res.status(500).json(err);
+        res.status(500).json({error: "Unable to retrieve blogpost."});
     }
+});
+// Create a new blog post
+router.post("/", withAuth, async (req, res) => {
+  try {
+    const newBlogPost = await BlogPost.create({
+      postTitle: req.body.postTitle,
+      postContent: req.body.postContent,
+      postDate: req.body.postDate,
+      postAuthor: req.session.user_id,
+    });
+    res.status(200).json(newBlogPost);
+  } catch (err) {
+    res.status(400).json({ error: "Unable to create blogpost." });
+  }
+});
+
+// Delete a blog post
+router.delete("/:id", withAuth, async (req, res) => {
+  try {
+    const deleteBlogPost = await BlogPost.destroy({
+      where: {
+        id: req.params.id,
+        postAuthor: req.session.user_id,
+      },
+    });
+    if (!deleteBlogPost) {
+      res.status(404).json({ message: "No blog post found with this id!" });
+      return;
+    }
+    res.status(200).json(deleteBlogPost);
+  } catch (err) {
+    res.status(500).json({ error: "Unable to delete blogpost." });
+  }
+});
+
+// Update a blog post
+router.put("/:id", withAuth, async (req, res) => {
+  try {
+    const updateBlogPost = await BlogPost.update(
+      {
+        postTitle: req.body.postTitle,
+        postContent: req.body.postContent
+      },
+      {
+        where: {
+          postAuthor: req.params.id,
+        },
+      }
+    );
+    if (updateBlogPost[0] === 0) {
+      res.status(404).json({ message: "No blog post found with this id!" });
+      return;
+    }
+    res.status(200).json({ message: 'Blogpost updated successfully.' });
+  } catch (err) {
+    res.status(500).json({ error: 'Unable to update blogpost.' });
+  }
 });
 
 module.exports = router;

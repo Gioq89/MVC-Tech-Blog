@@ -7,7 +7,7 @@ const withAuth = require('../../utils/auth');
 router.post('/', async (req, res) => {
     try {
         const newComment = await Comments.create({
-            commentContent: req.body.commentContent,
+            commentsContent: req.body.commentsContent,
             post_id: req.body.post_id,
             user_id: req.session.user_id,
         });
@@ -40,7 +40,7 @@ router.delete('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
         const updateComment = await Comments.update({
-            commentContent: req.body.commentContent,
+            commentsContent: req.body.commentsContent,
             user_id: req.session.user_id,
         },
             {
@@ -61,7 +61,7 @@ router.put('/:id', async (req, res) => {
 // Get all comments
 router.get('/', async (req, res) => {
     try {
-        const allComments = await Comments.findAll()({
+        const allComments = await BlogPost.findAll()({
         include: [
             {
                 model: BlogPost,
