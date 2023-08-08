@@ -4,26 +4,26 @@ const withAuth = require('../../utils/auth');
 
 //CRUD operations for comments
 // Create a new comment 
-router.post('/', async (req, res) => {
+router.post('/',withAuth, async (req, res) => {
     try {
         const newComment = await Comments.create({
             commentsContent: req.body.commentsContent,
-            post_id: req.body.post_id,
-            user_id: req.session.user_id,
+            commentsPost: req.body.post_id,
+            commentsAuthor: req.session.user_id,
         });
         res.status(200).json(newComment);
     } catch (err) {
-        res.status(400).json(err);
+        res.status(400).json({ error: 'Unable to create a new comment.' });
     }
 });
 
 // Delete a comment
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', withAuth, async (req, res) => {
     try {
         const deleteComment = await Comments.destroy({
             where: {
                 id: req.params.id,
-                user_id: req.session.user_id,
+                commentsAuthor: req.session.user_id,
             },
         });
         if (!deleteComment) {
@@ -32,7 +32,7 @@ router.delete('/:id', async (req, res) => {
         }
         res.status(200).json(deleteComment);
     } catch (err) {
-        res.status(500).json(err);
+        res.status(500).json({ error: 'Unable to delete the comment.' });
     }
 });
 
@@ -40,40 +40,21 @@ router.delete('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
         const updateComment = await Comments.update({
-            commentsContent: req.body.commentsContent,
-            user_id: req.session.user_id,
+            commentsContent: req.body.commentsContent
         },
             {
                 where: {
-                    id: req.params.id,
+                    commentsAuthor: req.params.id,
                 },
             });
-        if (!updateComment) {
+        if (!updateComment[0] === 0) {
             res.status(404).json({ message: 'No comment found with this id!' });
             return;
         }
         res.status(200).json(updateComment);
     } catch (err) {
-        res.status(500).json(err);
+        res.status(500).json({ error: 'Unable to update the comment.' });
     }
 });
-
-// Get all comments
-router.get('/', async (req, res) => {
-    try {
-        const allComments = await BlogPost.findAll()({
-        include: [
-            {
-                model: BlogPost,
-                attributes: ['postTitle', 'postContent'],
-            },
-        ],
-    });
-        res.status(200).json(allComments);
-    } catch (err) {
-        res.status(500).json(err);
-    }
-});
-
 
 module.exports = router;

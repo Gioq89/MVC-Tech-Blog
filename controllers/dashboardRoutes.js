@@ -3,22 +3,17 @@ const { BlogPost } = require("../models");
 const withAuth = require("../utils/auth");
 
 // GET all blogposts for dashboard with auth
-router.get("/", async (req, res) => {
+router.get("/", withAuth, async (req, res) => {
   try {
-    const blogPost = await BlogPost.findAll({
+    const blogPosts = await BlogPost.findAll({
       where: {
         postAuthor: req.session.user_id,
       },
-      attributes: ["id", "postTitle", "postContent", "postDate", "postAuthor"],
+      attributes: ["id", "postTitle", "postContent", "postDate"],
       include: [
         {
           model: Comment,
-          attributes: [
-            "id",
-            "commentsContent",
-            "commentsAuthor",
-            "commentsDate",
-          ],
+          attributes: [ "id","commentsContent","commentsDate",],
           include: {
             model: User,
             attributes: ["username"],
@@ -27,14 +22,9 @@ router.get("/", async (req, res) => {
       ],
     });
 
-    const blogposts = blogPost.map((blogpost) => blogpost.get({ plain: true }));
-    res.render("dashboard", {
-      blogposts,
-      logged_in: req.session.logged_in,
-    });
+    res.status(200).json(blogPosts);
   } catch (err) {
-    console.log("Unable to get blogposts");
-    res.status(500).json(err);
+    res.status(500).json({ error: 'Unable to retrieve blogposts for the dashboard.' });
   }
 });
 
