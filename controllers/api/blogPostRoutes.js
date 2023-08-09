@@ -7,48 +7,57 @@ const withAuth = require("../../utils/auth");
 router.get("/", async (req, res) => {
   try {
     const allBlogPost = await BlogPost.findAll({
-      attributes: ["id", "postTitle", "postContent", "postDate", "postAuthor"],
       include: [
         {
           model: Comments,
           attributes: ["id", "commentsContent", "commentsDate", "commentsAuthor"],
         },
         {
-            model: User,
-            attributes: ["username"],
-        }
+          model: User,
+          attributes: ["username"],
+        },
       ],
     });
-    res.status(200).json(allBlogPost);
+
+    const blogPosts = allBlogPost.map((blogPost) => blogPost.get({ plain: true }));
+
+    res.render("homepage", {
+      blogPosts,
+      logged_in: req.session.logged_in,
+    });
   } catch (err) {
     res.status(500).json({error: "Unable to retrieve blogposts."});
   }
 });
+
 // Get a single blog post
 router.get("/:id", async (req, res) => {
-    try {
-        const blogPost = await BlogPost.findByPk(req.params.id, {
-            attributes: ["id", "postTitle", "postContent", "postDate", "postAuthor"],
-            include: [
-                {
-                    model: Comments,
-                    attributes: ["id", "commentsContent", "commentsDate", "commentsAuthor"],
-                },
-                {
-                    model: User,
-                    attributes: ["username"],
-                }
-            ],
-        });
-        if (!blogPost) {
-            res.status(404).json({message: "No blog post found with this id!"});
-            return;
-        }
-        res.status(200).json(blogPost);
-    } catch (err) {
-        res.status(500).json({error: "Unable to retrieve blogpost."});
-    }
+  try {
+    const oneBlogPost = await BlogPost.findByPk(req.params.id, {
+      include: [
+        {
+          model: Comments,
+          attributes: ["id", "commentsContent", "commentsDate", "commentsAuthor"],
+        },
+        {
+          model: User,
+          attributes: { exclude: ["password"] },
+        },
+      ],
+    });
+
+    const blogPost = oneBlogPost.get({ plain: true });
+
+    res.render("blogpost", {
+      blogPost,
+      comments,
+      logged_in: req.session.logged_in,
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Unable to retrieve blogpost." });
+  }
 });
+
 // Create a new blog post
 router.post("/", withAuth, async (req, res) => {
   try {
@@ -58,7 +67,7 @@ router.post("/", withAuth, async (req, res) => {
       postDate: req.body.postDate,
       postAuthor: req.session.user_id,
     });
-    res.status(200).json(newBlogPost);
+    res.status(200).json({newBlogPost, message: "Blogpost created successfully."});
   } catch (err) {
     res.status(400).json({ error: "Unable to create blogpost." });
   }
@@ -77,7 +86,7 @@ router.delete("/:id", withAuth, async (req, res) => {
       res.status(404).json({ message: "No blog post found with this id!" });
       return;
     }
-    res.status(200).json(deleteBlogPost);
+    res.status(200).json({deleteBlogPost, message: "Blogpost deleted successfully."});
   } catch (err) {
     res.status(500).json({ error: "Unable to delete blogpost." });
   }
@@ -89,7 +98,8 @@ router.put("/:id", withAuth, async (req, res) => {
     const updateBlogPost = await BlogPost.update(
       {
         postTitle: req.body.postTitle,
-        postContent: req.body.postContent
+        postContent: req.body.postContent,
+        postDate: req.body.postDate,
       },
       {
         where: {
@@ -97,11 +107,8 @@ router.put("/:id", withAuth, async (req, res) => {
         },
       }
     );
-    if (updateBlogPost[0] === 0) {
-      res.status(404).json({ message: "No blog post found with this id!" });
-      return;
-    }
-    res.status(200).json({ message: 'Blogpost updated successfully.' });
+    
+      res.status(404).json({ updateBlogPost, message: "No blog post found with this id!" });
   } catch (err) {
     res.status(500).json({ error: 'Unable to update blogpost.' });
   }
