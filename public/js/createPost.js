@@ -5,6 +5,7 @@ const createPostHandler = async (event) => {
     const postContent = document.querySelector('#postContent').value.trim();
 
     if (postTitle && postContent) {
+        try {
         const response = await fetch('/api/blogPosts', {
             method: 'POST',
             body: JSON.stringify({ postTitle, postContent }),
@@ -14,8 +15,13 @@ const createPostHandler = async (event) => {
         if (response.ok) {
             document.location.replace('/dashboard');
         } else {
-            alert('Failed to create post');
-        }
+            const errorData = await response.json();
+            alert(errorData || 'Failed to create post');
+        } 
+    } catch (error) {
+            console.error('Error creating post:', error);
+            alert('An error occurred while creating the post.');
+    }
     }
 };
 

@@ -1,11 +1,11 @@
-const deletePostHanlder = async (event) => {
+const deletePostHandler = async (event) => {
     event.preventDefault();
 
     const postId = window.location.toString().split('/')[
         window.location.toString().split('/').length - 1
     ];
 
-    const response = await fetch(`/api/blogPosts/${postId}`, {
+    const response = await fetch(`/api/blogposts/${postId}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'

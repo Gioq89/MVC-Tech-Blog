@@ -8,7 +8,7 @@ const editPostHandler = async (event) => {
     const postTitle = document.querySelector('#postTitle').value.trim();
     const postContent = document.querySelector('#postContent').value.trim();
 
-    const response = await fetch(`/api/blogPosts/${postId}`, {
+    const response = await fetch(`/api/blogposts/${postId}`, {
         method: 'PUT',
         body: JSON.stringify({
             postTitle,

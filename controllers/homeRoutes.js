@@ -1,42 +1,55 @@
 const router = require("express").Router();
+const e = require("express");
 const { User, BlogPost, Comments } = require("../models");
+const withAuth = require("../utils/auth");
 
 // GET all blogposts for homepage without auth
 router.get("/", async (req, res) => {
   try {
-    const blogPost = await BlogPost.findAll({
-      attributes: ["id", "postTitle", "postContent", "postDate" ],
-      include: [
-        {
+    const blogPostsData = await BlogPost.findAll({
+      include: [  
+      {
           model: User,
-          attributes: ["username"],
+          attributes: { exclude: ["password"] },
         },
       ],
     });
-    res.status(200).json(blogPost);
+
+  const blogPosts = blogPostsData.map((blogPost) => blogPost.get({ plain: true }));
+
+    res.render("homepage", {
+      blogPosts,
+      logged_in: req.session.logged_in,
+    });
   } catch (err) {
     res.status(500).json({ error: 'Unable to retrieve blogposts.' });
   }
 });
 
 // GET one blogpost
-router.get("/blogpost/:id", async (req, res) => {
+router.get("/blogpost/:id", withAuth, async (req, res) => {
   try {
-    const blogPost = await BlogPost.findByPk(req.params.id, {
-      attributes: ['id', 'postTitle', 'postContent', 'postDate'],
+    const blogPostData = await BlogPost.findByPk(req.params.id, {
       include: [
         {
+          model: Comments,
+          attributes: ['id', 'commentsContent', 'commentsDate'],
+        },
+        {
           model: User,
-          attributes: ['username'],
+          attributes: { exclude: ['password'] },
         },
       ],
     });
-    if (!blogPost) {
-      res.status(404).json({ error: 'Blogpost not found.' });
-      return;
-    }
+    const blogPost = blogPostData.get({ plain: true });
 
-    res.status(200).json(blogPost);
+    const comments = blogPost.comments;
+
+    res.render("blogPost", {
+      blogPost,
+      comments,
+      logged_in: req.session.logged_in,
+    });
   } catch (err) {
     res.status(500).json({ error: 'Unable to retrieve blogpost.' });
   }
@@ -161,7 +174,7 @@ router.get("/edit/:id", async (req, res) => {
         ],
       });
 
-      if (!blogPost) {
+      if (!blogPostData) {
         res.status(404).json({ error: 'Blogpost not found.' });
         return;
       }
@@ -174,12 +187,12 @@ router.get("/edit/:id", async (req, res) => {
 
 // GET login page
 router.get("/login", (req, res) => {
-  res.status(200).json({ message: 'Login page' });
+  res.render("login");
 });
 
 // GET signup page
 router.get("/signup", (req, res) => {
-  res.status(200).json({ message: 'Signup page' });
+  res.render("signup");
 });
 
 module.exports = router;

@@ -9,22 +9,43 @@ router.get("/", withAuth, async (req, res) => {
       where: {
         postAuthor: req.session.user_id,
       },
-      attributes: ["id", "postTitle", "postContent", "postDate"],
-      include: [
-        {
-          model: Comment,
-          attributes: [ "id","commentsContent","commentsDate",],
-          include: {
-            model: User,
-            attributes: ["username"],
-          },
-        },
-      ],
     });
 
-    res.status(200).json(blogPosts);
+      const blogPost = blogPosts.map((blogPost) => blogPost.get({ plain: true }));
+
+      res.render("dashboard", {
+        blogPost,
+        logged_in: req.session.logged_in,
+    });
   } catch (err) {
     res.status(500).json({ error: 'Unable to retrieve blogposts for the dashboard.' });
+  }
+});
+
+// CREATE new blogpost
+router.get("/new", withAuth, async (req, res) => {
+  try {
+    res.render("ceatePost", {
+      logged_in: req.session.logged_in,
+    });
+  } catch (err) {
+    res.status(500).json({ error: 'Unable to create new blogpost.' });
+  }
+});
+
+// UPDATE blogpost from dashboard
+router.get("/edit/:id", withAuth, async (req, res) => {
+  try {
+    const blogPostData = await BlogPost.findByPk(req.params.id);
+
+    const blogPost = blogPostData.get({ plain: true });
+
+    res.render("editPost", {
+      blogPost,
+      logged_in: req.session.logged_in,
+    });
+  } catch (err) {
+    res.status(500).json({ error: 'Unable to edit blogpost.' });
   }
 });
 
