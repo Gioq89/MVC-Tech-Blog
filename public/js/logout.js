@@ -4,12 +4,12 @@ const logoutFormHandler = async () => {
     method: "POST",
     headers: { "Content-Type": "application/json" },
   });
-  console.log("logoutFormHandler");
   // If logged out successfully, redirect to the login page
   if (response.ok) {
-    document.location.replace("/login");
+    document.location.replace("/");
   } else {
     alert("Failed to log out");
   }
 };
+
 document.querySelector("#logout").addEventListener("click", logoutFormHandler);

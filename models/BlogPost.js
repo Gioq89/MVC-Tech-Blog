@@ -25,7 +25,7 @@ BlogPost.init(
       allowNull: false,
     },
     postAuthor: {
-      type: DataTypes.INTEGER, // Change this to INTEGER since it references the user's ID
+      type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: 'user',

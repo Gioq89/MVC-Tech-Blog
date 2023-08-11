@@ -26,43 +26,4 @@ router.post("/", withAuth, async (req, res) => {
   }
 });
 
-// Delete a comment
-router.delete("/:id", withAuth, async (req, res) => {
-  try {
-    const deleteComment = await Comments.destroy({
-      where: {
-        id: req.params.id,
-        commentsAuthor: req.session.user_id,
-      },
-    });
-    res
-      .status(200)
-      .json({ deleteComment, message: "Comment deleted successfully." });
-  } catch (err) {
-    res.status(500).json({ error: "Unable to delete the comment." });
-  }
-});
-
-// Update a comment
-router.put("/:id", withAuth, async (req, res) => {
-  try {
-    const updateComment = await Comments.update(
-      {
-        commentsContent: req.body.commentsContent,
-      },
-      {
-        where: {
-          commentsAuthor: req.params.id,
-        },
-      }
-    );
-    res
-      .status(404)
-      .json({ updateComment, message: "No comment found with this id!" });
-  } catch (err) {
-    res.status(500).json({ error: "Unable to update the comment." });
-  }
-});
-
-
 module.exports = router;

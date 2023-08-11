@@ -1,6 +1,6 @@
 const loginFormHandler = async (event) => {
   event.preventDefault();
-  console.log("loginFormHandler");
+
   const username = document.querySelector("#username-login").value.trim();
   const password = document.querySelector("#password-login").value.trim();
   // If the email and password fields match, log the user in
@@ -19,6 +19,4 @@ const loginFormHandler = async (event) => {
   }
 };
 
-document
-  .querySelector(".login-form")
-  .addEventListener("submit", loginFormHandler);
+document.querySelector(".login-form").addEventListener("submit", loginFormHandler);

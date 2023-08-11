@@ -30,34 +30,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Get a single blog post
-router.get("/:id", async (req, res) => {
-  try {
-    const oneBlogPost = await BlogPost.findByPk(req.params.id, {
-      include: [
-        {
-          model: Comments,
-          attributes: ["id", "commentsContent", "commentsDate", "commentsAuthor"],
-        },
-        {
-          model: User,
-          attributes: { exclude: ["password"] },
-        },
-      ],
-    });
-
-    const blogPost = oneBlogPost.get({ plain: true });
-
-    res.render("blogpost", {
-      blogPost,
-      comments,
-      logged_in: req.session.logged_in,
-    });
-  } catch (err) {
-    res.status(500).json({ error: "Unable to retrieve blogpost." });
-  }
-});
-
 // Create a new blog post
 router.post("/", withAuth, async (req, res) => {
   try {

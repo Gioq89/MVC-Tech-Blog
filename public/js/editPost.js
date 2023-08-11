@@ -1,29 +1,34 @@
 const editPostHandler = async (event) => {
-    event.preventDefault();
+  event.preventDefault();
 
-    const postId = window.location.toString().split('/')[
-        window.location.toString().split('/').length - 1
-    ];
+  const postTitle = document.querySelector("#postTitle").value.trim();
+  const postContent = document.querySelector("#postContent").value.trim();
+  const currentPost = window.location.href;
+  const postId = window.currentPost.slice(
+    window.currentPost.lastIndexOf("/") + 1,
+    window.currentPost.length
+  );
 
-    const postTitle = document.querySelector('#postTitle').value.trim();
-    const postContent = document.querySelector('#postContent').value.trim();
-
+  if (postTitle && postContent) {
     const response = await fetch(`/api/blogposts/${postId}`, {
-        method: 'PUT',
-        body: JSON.stringify({
-            postTitle,
-            postContent
-        }),
-        headers: {
-            'Content-Type': 'application/json'
-        }
+      method: "PUT",
+      body: JSON.stringify({
+        postTitle,
+        postContent,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
     if (response.ok) {
-        console.log('Post updated!');
-        document.location.replace('/dashboard');
+      console.log("Post updated!");
+      document.location.replace("/blogpost/${postId}");
     } else {
-        alert("Failed to update post");
+      alert("Failed to update post");
     }
+  }
 };
 
-document.querySelector('#editPostBtn').addEventListener('click', editPostHandler);
+document
+  .querySelector("#editPostBtn")
+  .addEventListener("click", editPostHandler);

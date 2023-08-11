@@ -2,7 +2,8 @@ const createCommentHandler = async (event) => {
   event.preventDefault();
 
   const commentsContent = document.querySelector("#comment-text").value.trim();
-  const postId = window.location.pathname.split("/").pop();
+  const currentPost = window.location.href;
+  const postId = currentPost.slice(currentPost.lastIndexOf("/") + 1); // Corrected this line
 
   if (commentsContent) {
     try {
@@ -18,10 +19,9 @@ const createCommentHandler = async (event) => {
       });
 
       if (response.ok) {
-        document.location.reload();
+        document.location.replace(`/blogpost/${postId}`);
       } else {
-        const errorData = await response.json();
-        alert(errorData.error || "Failed to create comment");
+        alert("An error occurred while creating the comment.");
       }
     } catch (error) {
       console.error("Error creating comment:", error);
@@ -30,7 +30,4 @@ const createCommentHandler = async (event) => {
   }
 };
 
-document
-  .querySelector(".comment-form")
-  .addEventListener("submit", createCommentHandler);
-
+document.querySelector(".comment-form").addEventListener("submit", createCommentHandler);

@@ -1,9 +1,8 @@
 const deletePostHandler = async (event) => {
     event.preventDefault();
 
-    const postId = window.location.toString().split('/')[
-        window.location.toString().split('/').length - 1
-    ];
+    const currentPost = window.location.href;
+    const postId = currentPost.slice(currentPost.lastIndexOf('/') + 1, currentPost.length);
 
     const response = await fetch(`/api/blogposts/${postId}`, {
         method: 'DELETE',
@@ -12,7 +11,7 @@ const deletePostHandler = async (event) => {
         }
     });
     if (response.ok) {
-        console.log('Post deleted!');
+        console.log('Post deleted');
         document.location.replace('/dashboard');
     } else {
         alert("Failed to delete post");
