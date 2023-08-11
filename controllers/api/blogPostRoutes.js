@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { BlogPost, Comments } = require("../../models");
+const { BlogPost, Comments, User } = require("../../models");
 const withAuth = require("../../utils/auth");
 
 //CRUD operations for blogposts
@@ -38,7 +38,7 @@ router.post("/", withAuth, async (req, res) => {
       postContent: req.body.postContent,
       postDate: req.body.postDate,
       postAuthor: req.session.user_id,
-    });
+  });
     res.status(200).json({newBlogPost, message: "Blogpost created successfully."});
   } catch (err) {
     res.status(400).json({ error: "Unable to create blogpost." });
@@ -79,10 +79,14 @@ router.put("/:id", withAuth, async (req, res) => {
         },
       }
     );
-    
-      res.status(404).json({ updateBlogPost, message: "No blog post found with this id!" });
+
+    if (updateBlogPost[0] === 0) {
+      res.status(404).json({ message: "No blog post found with this id!" });
+    } else {
+      res.status(200).json({ message: "Blogpost updated successfully." });
+    }
   } catch (err) {
-    res.status(500).json({ error: 'Unable to update blogpost.' });
+    res.status(500).json({ error: "Unable to update blogpost." });
   }
 });
 

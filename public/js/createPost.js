@@ -4,9 +4,12 @@ const createPostHandler = async (event) => {
     const postTitle = document.querySelector('#postTitle').value.trim();
     const postContent = document.querySelector('#postContent').value.trim();
 
+    console.log('Post Title:', postTitle);
+    console.log('Post Content:', postContent);
+
     if (postTitle && postContent) {
         try {
-        const response = await fetch('/api/blogPosts', {
+        const response = await fetch('/api/blogposts', {
             method: 'POST',
             body: JSON.stringify({ postTitle, postContent }),
             headers: { 'Content-Type': 'application/json' },
@@ -25,4 +28,4 @@ const createPostHandler = async (event) => {
     }
 };
 
-document.querySelector('.create-post-form').addEventListener('submit', createPostHandler);
+document.querySelector('.createPost-form').addEventListener('submit', createPostHandler);

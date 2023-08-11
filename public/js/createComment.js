@@ -1,7 +1,7 @@
 const createCommentHandler = async (event) => {
   event.preventDefault();
 
-  const commentsContent = document.querySelector("#comment-text").value.trim();
+  const commentsContent = document.querySelector("#comment-content").value.trim();
   const currentPost = window.location.href;
   const postId = currentPost.slice(currentPost.lastIndexOf("/") + 1); // Corrected this line
 
@@ -30,4 +30,4 @@ const createCommentHandler = async (event) => {
   }
 };
 
-document.querySelector(".comment-form").addEventListener("submit", createCommentHandler);
+document.querySelector(".newComment-form").addEventListener("submit", createCommentHandler);
