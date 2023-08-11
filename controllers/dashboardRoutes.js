@@ -25,7 +25,7 @@ router.get("/", withAuth, async (req, res) => {
 // CREATE new blogpost
 router.get("/new", withAuth, async (req, res) => {
   try {
-    res.render("ceatePost", {
+    res.render("createPost", {
       logged_in: req.session.logged_in,
     });
   } catch (err) {

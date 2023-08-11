@@ -1,11 +1,11 @@
 <section class="dashboard">
-  <div class="dashboard-btn-container">
+  <div class="dashboard-btn-container justify-center m-5">
     <button class="dashboard-btn" id="dashboard-btn">Create Post</button>
   </div>
 
   <div class="userposts-container">
     {{#each userposts as |userpost|}}
-      <a href="/dashboard/edit/{{userpost.id}}" class="post-link">
+      <a href="/dashboard/edit/ {{userpost.id}}" class="post-link">
         <div class="post-card box-shadow">
           <div class="post-header display-flex justify-space-between">
             <h2 class="post-title">{{userpost.postTitle}}</h2>

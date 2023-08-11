@@ -11,6 +11,9 @@
 
 <body class="bg-info">
   <header class="display-flex justify-space-between align-center p-2">
+  <h1 style="font-size: 3rem">
+    Tech Wizards: The Tech Blog
+  </h1>
     <nav class="main-nav" style="font-size: 1.5rem">
       {{#if logged_in}}
       <a href="/" class="pr-5">Home</a>
@@ -23,9 +26,6 @@
       {{/if}}
     </nav>
   </header>
-  <h1 style="font-size: 3rem">
-    Tech Wizards: The Tech Blog
-  </h1>
   <main>
     {{{ body }}}
   </main>

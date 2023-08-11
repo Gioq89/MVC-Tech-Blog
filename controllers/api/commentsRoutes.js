@@ -3,6 +3,15 @@ const { Comments } = require("../../models");
 const withAuth = require("../../utils/auth");
 
 //CRUD operations for comments
+// Get all comments
+router.get("/", async (req, res) => {
+  try {
+    const allComments = await Comments.findAll();
+    res.status(200).json(allComments);
+  } catch (err) {
+    res.status(500).json({ error: "Unable to get all comments." });
+  }
+});
 // Create a new comment
 router.post("/", withAuth, async (req, res) => {
   try {
@@ -35,7 +44,7 @@ router.delete("/:id", withAuth, async (req, res) => {
 });
 
 // Update a comment
-router.put("/:id", async (req, res) => {
+router.put("/:id", withAuth, async (req, res) => {
   try {
     const updateComment = await Comments.update(
       {
@@ -54,5 +63,6 @@ router.put("/:id", async (req, res) => {
     res.status(500).json({ error: "Unable to update the comment." });
   }
 });
+
 
 module.exports = router;

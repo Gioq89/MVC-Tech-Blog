@@ -1,6 +1,6 @@
 const dashboard = async (event) => {
     event.preventDefault();
-    document.location.replace('/dashboard');
+    document.location.replace('/dashboard/new');
 };
 
 document
