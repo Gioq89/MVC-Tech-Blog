@@ -1,27 +1,29 @@
 const router = require("express").Router();
-const { User, BlogPost } = require("../models");
+const { User, BlogPost, Comments } = require("../models");
 const withAuth = require("../utils/auth");
 
 // GET all blogposts for homepage without auth
 router.get("/", async (req, res) => {
   try {
     const blogPostsData = await BlogPost.findAll({
-      include: [  
-      {
+      include: [
+        {
           model: User,
           attributes: { exclude: ["password"] },
         },
       ],
     });
 
-  const blogPosts = blogPostsData.map((blogPost) => blogPost.get({ plain: true }));
+    const blogPosts = blogPostsData.map((blogPost) =>
+      blogPost.get({ plain: true })
+    );
 
     res.render("homepage", {
       blogPosts,
       logged_in: req.session.logged_in,
     });
   } catch (err) {
-    res.status(500).json({ error: 'Unable to retrieve blogposts.' });
+    res.status(500).json({ error: "Unable to retrieve blogposts." });
   }
 });
 
@@ -32,7 +34,7 @@ router.get("/blogpost/:id", async (req, res) => {
       include: [
         {
           model: Comments,
-          include: [ User ],
+          include: [User],
         },
         {
           model: User,
@@ -44,17 +46,18 @@ router.get("/blogpost/:id", async (req, res) => {
     const blogPost = blogPostData.get({ plain: true });
 
     const comments = blogPost.comments;
-
+    console.log("comments", comments);
+    console.log("blogPost:", blogPost);
     res.render("blogpost", {
       blogPost,
       comments,
       logged_in: req.session.logged_in,
     });
   } catch (err) {
-    res.status(500).json({ error: 'Unable to retrieve blogpost.' });
+    console.log(err);
+    res.status(500).json({ error: "Unable to retrieve blogpost." });
   }
 });
-
 
 // GET login page
 router.get("/login", (req, res) => {

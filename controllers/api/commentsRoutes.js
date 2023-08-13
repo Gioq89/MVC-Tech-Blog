@@ -19,9 +19,11 @@ router.post("/", withAuth, async (req, res) => {
       commentsContent: req.body.commentsContent,
       commentsPost: req.body.post_id,
       commentsAuthor: req.session.user_id,
+      commentsDate: req.body.commentsDate,
     });
     res.status(200).json({ newComment, message: "New comment created!" });
   } catch (err) {
+    console.log(err);
     res.status(400).json({ error: "Unable to create a new comment." });
   }
 });

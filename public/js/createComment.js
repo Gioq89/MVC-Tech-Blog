@@ -1,10 +1,12 @@
 const createCommentHandler = async (event) => {
   event.preventDefault();
 
-  const commentsContent = document.querySelector("#comment-content").value.trim();
+  const commentsContent = document
+    .querySelector("#comment-content")
+    .value.trim();
   const currentPost = window.location.href;
   const postId = currentPost.slice(currentPost.lastIndexOf("/") + 1); // Corrected this line
-
+  const date = new Date();
   if (commentsContent) {
     try {
       const response = await fetch("/api/comments", {
@@ -12,6 +14,7 @@ const createCommentHandler = async (event) => {
         body: JSON.stringify({
           post_id: postId,
           commentsContent,
+          commentsDate: date,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -30,4 +33,6 @@ const createCommentHandler = async (event) => {
   }
 };
 
-document.querySelector(".newComment-form").addEventListener("submit", createCommentHandler);
+document
+  .querySelector(".newComment-form")
+  .addEventListener("submit", createCommentHandler);

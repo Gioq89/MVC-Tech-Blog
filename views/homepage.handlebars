@@ -1,18 +1,21 @@
 <section class="homepage-page">
   <div class="container display-flex">
     <div class="box col-12">
-      {{#each posts as |post|}}
-      <a href="/post/{{post.id}}">
-        <div class="card flex-column box-shadow">
-          <div class="card-header display-flex justify-space-between">
-            <h2>{{post.postTitle}}</h2>
-            <p class="my-auto">Posted by {{user.username}} on {{format_date post.postDate}}</p>
+      {{#each blogPosts as |post|}}
+        <a href="/blogpost/{{post.id}}">
+          <div class="card flex-column box-shadow">
+            <div class="card-header display-flex justify-space-between">
+              <h2>{{post.postTitle}}</h2>
+              <p class="my-auto">Posted by
+                {{user.username}}
+                on
+                {{format_date post.postDate}}</p>
+            </div>
+            <div class="card-body bg-light" style="flex: 1; color: black">
+              <p>{{post.postContent}}</p>
+            </div>
           </div>
-          <div class="card-body bg-light" style="flex: 1; color: black">
-            <p>{{post.postContent}}</p>
-          </div>
-        </div>
-      </a>
+        </a>
       {{/each}}
     </div>
   </div>

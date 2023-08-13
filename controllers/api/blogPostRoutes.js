@@ -10,7 +10,12 @@ router.get("/", async (req, res) => {
       include: [
         {
           model: Comments,
-          attributes: ["id", "commentsContent", "commentsDate", "commentsAuthor"],
+          attributes: [
+            "id",
+            "commentsContent",
+            "commentsDate",
+            "commentsAuthor",
+          ],
         },
         {
           model: User,
@@ -19,14 +24,13 @@ router.get("/", async (req, res) => {
       ],
     });
 
-    const blogPosts = allBlogPost.map((blogPost) => blogPost.get({ plain: true }));
-
-    res.render("homepage", {
-      blogPosts,
-      logged_in: req.session.logged_in,
-    });
+    const blogPosts = allBlogPost.map((blogPost) =>
+      blogPost.get({ plain: true })
+    );
+    console.log(blogPosts);
+    res.send(blogPosts);
   } catch (err) {
-    res.status(500).json({error: "Unable to retrieve blogposts."});
+    res.status(500).json({ error: "Unable to retrieve blogposts." });
   }
 });
 
@@ -38,10 +42,13 @@ router.post("/", withAuth, async (req, res) => {
       postContent: req.body.postContent,
       postDate: req.body.postDate,
       postAuthor: req.session.user_id,
-  });
-    res.status(200).json({newBlogPost, message: "Blogpost created successfully."});
+    });
+    res
+      .status(200)
+      .json({ newBlogPost, message: "Blogpost created successfully." });
   } catch (err) {
     res.status(400).json({ error: "Unable to create blogpost." });
+    console.log(err);
   }
 });
 
@@ -58,7 +65,9 @@ router.delete("/:id", withAuth, async (req, res) => {
       res.status(404).json({ message: "No blog post found with this id!" });
       return;
     }
-    res.status(200).json({deleteBlogPost, message: "Blogpost deleted successfully."});
+    res
+      .status(200)
+      .json({ deleteBlogPost, message: "Blogpost deleted successfully." });
   } catch (err) {
     res.status(500).json({ error: "Unable to delete blogpost." });
   }

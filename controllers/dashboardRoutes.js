@@ -11,14 +11,16 @@ router.get("/", withAuth, async (req, res) => {
       },
     });
 
-      const blogPost = blogPosts.map((blogPost) => blogPost.get({ plain: true }));
+    const blogPost = blogPosts.map((blogPost) => blogPost.get({ plain: true }));
 
-      res.render("dashboard", {
-        blogPost,
-        logged_in: req.session.logged_in,
+    res.render("dashboard", {
+      blogPost,
+      logged_in: req.session.logged_in,
     });
   } catch (err) {
-    res.status(500).json({ error: 'Unable to retrieve blogposts for the dashboard.' });
+    res
+      .status(500)
+      .json({ error: "Unable to retrieve blogposts for the dashboard." });
   }
 });
 
@@ -29,7 +31,7 @@ router.get("/new", withAuth, async (req, res) => {
       logged_in: req.session.logged_in,
     });
   } catch (err) {
-    res.status(500).json({ error: 'Unable to create new blogpost.' });
+    res.status(500).json({ error: "Unable to create new blogpost." });
   }
 });
 
@@ -39,13 +41,14 @@ router.get("/edit/:id", withAuth, async (req, res) => {
     const blogPostData = await BlogPost.findByPk(req.params.id);
 
     const blogPost = blogPostData.get({ plain: true });
-
-    res.render("editPost", {
+    console.log(blogPost);
+    res.render("blogPost", {
       blogPost,
       logged_in: req.session.logged_in,
     });
   } catch (err) {
-    res.status(500).json({ error: 'Unable to edit blogpost.' });
+    console.log(err);
+    res.status(500).json({ error: "Unable to edit blogpost." });
   }
 });
 
