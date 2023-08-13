@@ -1,21 +1,23 @@
 <section class="dashboard">
-
-  <div class="userposts-container">
+<div class="container display-flex">
+  <div class="userposts-container box col-12">
     {{#each blogPost as |userpost|}}
       <a href="/dashboard/edit/{{userpost.id}}" class="post-link">
-        <div class="post-card box-shadow">
-          <div class="post-header display-flex justify-space-between">
+        <div class="card flex-column box-shadow m-3">
+          <div class="card-header display-flex justify-space-between">
             <h2 class="post-title">{{userpost.postTitle}}</h2>
             <h3 class="post-date">{{format_date userpost.postDate}}</h3>
           </div>
-
+                    <div class="card-body bg-light" style="flex: 1; color: black">
+              <p>{{userpost.postContent}}</p>
+            </div>
         </div>
       </a>
 
     {{/each}}
 
     <div class="dashboard-btn-container justify-center m-5">
-      <button class="dashboard-btn" id="dashboard-btn">Create Post</button>
+      <button class="btn btn-primary" id="dashboard-btn">Create new post!</button>
     </div>
   </div>
 </section>
