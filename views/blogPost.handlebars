@@ -1,7 +1,7 @@
 <section class="blogpost-page">
   <div class="container display-flex">
     <div class="box col-12">
-      <div class="card flex-column">
+      <div class="card flex-column m-2">
         <div class="card-header display-flex justify-space-between">
           <h2>{{blogPost.postTitle}}</h2>
           <p class="my-auto">Posted by
@@ -17,21 +17,22 @@
   </div>
   {{#if comments}}
     <div class="container display-flex">
-      <h2>Comments</h2>
+      <h2 class="ml-2">Comments</h2>
     </div>
   {{/if}}
   <div class="container display-flex">
     <div class="box col-12">
       <section class="comment">
         {{#each comments as |comment|}}
-          <div class="card box-shadow p-5 bg-light">
-            {{comment.commentsContent}}
-            <span class="comment-details">
-              <span class="comment-author">{{comment.commentsAuthor}}</span>
-              <span class="comment-date">{{format_date
-                  comment.commentsDate
-                }}</span>
-            </span>
+          <div class="card m-2">
+            <div class="card-header display-flex justify-space-between">
+              <h5>{{user.username}}</h5>
+              <p class="my-auto">Posted on
+                {{format_date comment.commentsDate}}</p>
+            </div>
+            <div class="card-body box-shadow p-10 bg-light">
+              {{comment.commentsContent}}
+            </div>
           </div>
         {{/each}}
       </section>
@@ -41,7 +42,7 @@
     <div class="container display-flex box col-6">
       <form class="form newComment-form">
         <div class="form-group">
-          <label for="comment-content"><h3>Comment</h3></label>
+          <label for="comment-content"><h3>Leave a comment!</h3></label>
           <textarea
             class="form-input"
             type="text"

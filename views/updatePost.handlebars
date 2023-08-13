@@ -4,15 +4,31 @@
     <form class="editPost-form">
       <div class="form-group">
         <label for="updated-post-title" class="form-label">Title</label>
-        <input class="form-input" type="text" id="updated-post-title" />
+        <input
+          class="form-input"
+          type="text"
+          id="postTitle"
+          placeholder={{blogPost.postTitle}}
+        />
       </div>
       <div class="form-group">
         <label for="updated-post-content" class="form-label">Content</label>
-        <textarea class="form-input" id="updated-post-content"></textarea>
+        <textarea
+          class="form-input"
+          id="postContent"
+          placeholder={{blogPost.postContent}}
+        ></textarea>
       </div>
       <div class="form-group display-flex">
-        <buttonclass="btn btn-primary flex-grow-1"type="submit">Update</button>
-        <buttonclass="btn btn-primary flex-grow-1"id="delete-button">Delete</button>
+        <button
+          id="editPostBtn"
+          class="btn btn-primary flex-grow-1"
+          type="submit"
+        >Update</button>
+        <button
+          class="btn btn-primary flex-grow-1"
+          id="deletePostBtn"
+        >Delete</button>
       </div>
     </form>
   </div>

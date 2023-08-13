@@ -41,8 +41,8 @@ router.get("/edit/:id", withAuth, async (req, res) => {
     const blogPostData = await BlogPost.findByPk(req.params.id);
 
     const blogPost = blogPostData.get({ plain: true });
-    console.log(blogPost);
-    res.render("blogPost", {
+
+    res.render("updatePost", {
       blogPost,
       logged_in: req.session.logged_in,
     });

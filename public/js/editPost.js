@@ -3,26 +3,29 @@ const editPostHandler = async (event) => {
 
   const postTitle = document.querySelector("#postTitle").value.trim();
   const postContent = document.querySelector("#postContent").value.trim();
-  const currentPost = window.location.href;
-  const postId = window.currentPost.slice(
-    window.currentPost.lastIndexOf("/") + 1,
-    window.currentPost.length
+
+  const postId = window.location.href.slice(
+    window.location.href.lastIndexOf("/") + 1,
+    window.location.href.length
   );
 
   if (postTitle && postContent) {
+    const date = new Date();
     const response = await fetch(`/api/blogposts/${postId}`, {
       method: "PUT",
       body: JSON.stringify({
         postTitle,
         postContent,
+        postDate: date,
       }),
       headers: {
         "Content-Type": "application/json",
       },
     });
+
     if (response.ok) {
       console.log("Post updated!");
-      document.location.replace("/blogpost/${postId}");
+      document.location.replace(`/blogpost/${postId}`);
     } else {
       alert("Failed to update post");
     }

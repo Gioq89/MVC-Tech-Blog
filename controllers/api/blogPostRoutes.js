@@ -75,6 +75,7 @@ router.delete("/:id", withAuth, async (req, res) => {
 
 // Update a blog post
 router.put("/:id", withAuth, async (req, res) => {
+  console.log(req.body);
   try {
     const updateBlogPost = await BlogPost.update(
       {
@@ -84,17 +85,16 @@ router.put("/:id", withAuth, async (req, res) => {
       },
       {
         where: {
-          postAuthor: req.params.id,
+          id: req.params.id,
+          postAuthor: req.session.user_id,
         },
       }
     );
+    console.log(updateBlogPost);
 
-    if (updateBlogPost[0] === 0) {
-      res.status(404).json({ message: "No blog post found with this id!" });
-    } else {
-      res.status(200).json({ message: "Blogpost updated successfully." });
-    }
+    res.status(200).json({ message: "Blogpost updated successfully." });
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: "Unable to update blogpost." });
   }
 });
