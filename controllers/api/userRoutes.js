@@ -5,18 +5,15 @@ const bcrypt = require("bcrypt");
 // Create a new user
 router.post("/", async (req, res) => {
   try {
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
     const newUser = await User.create({
       username: req.body.username,
-      email: req.body.email,
-      password: hashedPassword,
+      password: req.body.password,
     });
 
     req.session.save(() => {
+      req.session.username = newUser.username;
       req.session.user_id = newUser.id;
       req.session.logged_in = true;
-      req.session.username = newUser.username;
 
       res.status(200).json({
         user: newUser,
@@ -46,13 +43,12 @@ router.post("/login", async (req, res) => {
     }
 
     req.session.save(() => {
-    req.session.user_id = user.id;
-    req.session.logged_in = true;
-    req.session.username = user.username;
+      req.session.username = user.username;
+      req.session.user_id = user.id;
+      req.session.logged_in = true;
 
-    res.status(200).json({ message: "Login successful.",
- });
-});
+      res.status(200).json({ message: "Login successful." });
+    });
   } catch (err) {
     res.status(400).json({ error: "Unable to login." });
   }
